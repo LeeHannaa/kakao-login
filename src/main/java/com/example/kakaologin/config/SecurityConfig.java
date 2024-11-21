@@ -40,10 +40,11 @@ public class SecurityConfig {
                 .addFilterBefore(
                         new JwtTokenFilter(authService, SECRET_KEY), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // jwt 사용
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/scrd/auth/**", "/error").permitAll()
-                        .requestMatchers("/scrd/**").authenticated() // 인증된 사용자만
+                        .requestMatchers("/scrd/every/**").permitAll()
+                        .requestMatchers("/scrd/api/**").authenticated() // 인증된 사용자만
                 );
         return httpSecurity.build();
     }

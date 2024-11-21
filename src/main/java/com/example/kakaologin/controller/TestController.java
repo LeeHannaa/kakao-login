@@ -12,4 +12,10 @@ public class TestController {
         System.out.println("test api 요청 호출");
         return "test api success";
     }
+
+    @GetMapping("/scrd/every")
+    public String EveryApi() {
+        System.out.println("every api 요청 호출");
+        return "every api success";
+    }
 }

@@ -35,7 +35,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         if (request.getRequestURI().startsWith("/error")
-                || request.getRequestURI().startsWith("/scrd/auth/")) { // 로그인 하려는 사용자
+                || request.getRequestURI().startsWith("/scrd/auth/") // 로그인 하려는 사용자 패쓰
+                || request.getRequestURI().startsWith("/scrd/every")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -60,14 +61,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         // loginUser 정보로 UsernamePasswordAuthenticationToken 발급
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        loginUser.getId(),
+                        loginUser.getId(), // 인증 주체
                         null,
                         List.of(new SimpleGrantedAuthority("USER")));
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         // 권한 부여
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+        System.out.println("로그인 요청 후 사용자에게 사이트 이용가능하도록 권한 부여 : " + SecurityContextHolder.getContext().getAuthentication());
         filterChain.doFilter(request, response);
     }
 }
