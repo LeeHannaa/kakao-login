@@ -44,6 +44,7 @@ public class KakaoLoginService {
 
         // HTTP 요청 보내기
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
+
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(
                 "https://kauth.kakao.com/oauth/token",
@@ -51,6 +52,7 @@ public class KakaoLoginService {
                 kakaoTokenRequest,
                 String.class
         );
+
         // HTTP 응답 (JSON) -> 액세스 토큰 파싱
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();

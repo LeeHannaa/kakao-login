@@ -30,7 +30,7 @@ public class AuthController {
     public ResponseEntity<KakaoLoginResponse> kakaoLogin(@RequestParam String code, HttpServletRequest request) {
         UserDto userDto =
                 authService.kakaoLogin(
-                        kakaoLoginService.kakaoLogin(code,request.getHeader("Referer")+"login/oauth/kakao"));
+                        kakaoLoginService.kakaoLogin(code,request.getHeader("Origin")+"/login/oauth/kakao"));
         System.out.println(userDto);
         return ResponseEntity.ok(
                 KakaoLoginResponse.builder()
