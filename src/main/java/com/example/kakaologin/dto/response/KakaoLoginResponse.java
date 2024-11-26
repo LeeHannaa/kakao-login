@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 public class KakaoLoginResponse {
     private String accessToken;
+    private String refreshToken;
     private String name;
     private String imgUrl;
 }
