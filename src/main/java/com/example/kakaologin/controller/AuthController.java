@@ -8,6 +8,7 @@ import com.example.kakaologin.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,10 +40,15 @@ public class AuthController {
                         kakaoLoginService.kakaoLogin(code,request.getHeader("Origin")+"/login/oauth/kakao"));
         List<String> jwtToken = jwtUtil.createToken(userDto.getId(), SECRET_KEY, EXPIRE_TIME_MS, EXPIRE_REFRESH_TIME_MS);
         System.out.println(userDto);
-        return ResponseEntity.ok(
-                KakaoLoginResponse.builder()
-                        .accessToken(jwtToken.get(0))
-                        .refreshToken(jwtToken.get(1))
+
+        // 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + jwtToken.get(0));  // accessToken
+        headers.set("X-Refresh-Token", jwtToken.get(1));  // refreshToken
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(KakaoLoginResponse.builder()
                         .name(userDto.getName())
                         .imgUrl(userDto.getImgUrl())
                         .build());

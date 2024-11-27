@@ -57,6 +57,9 @@ public class SecurityConfig {
         config.setAllowedMethods(Arrays.asList("POST", "GET", "PATCH", "DELETE", "PUT"));
         config.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
         config.setAllowCredentials(true); // 내 서버가 응답할 때 json을 JS에서 처리할 수 있게 설정
+        // ExpoesdHeader에 클라이언트가 응답에 접근할 수 있는 header들을 추가
+        config.addExposedHeader("Authorization");
+        config.addExposedHeader("X-Refresh-Token");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

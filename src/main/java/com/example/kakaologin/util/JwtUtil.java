@@ -35,7 +35,6 @@ public class JwtUtil {
                 .compact();
 
         String refreshToken =  Jwts.builder()
-                .setClaims(claims) // 정보 저장
                 .setIssuedAt(new Date(System.currentTimeMillis())) // 토큰 발행 시간 정보
                 .setExpiration(new Date(System.currentTimeMillis() + expireRefreshTimeMs)) // set expireRefreshTimeMs
                 .signWith(SignatureAlgorithm.HS256, secretKey)   // 사용할 암호화 알고리즘과
