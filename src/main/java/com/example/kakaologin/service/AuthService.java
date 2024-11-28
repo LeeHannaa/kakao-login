@@ -17,8 +17,9 @@ public class AuthService {
         User user = userRepository
                         .findByKakaoId(dto.getKakaoId())
                         .orElseGet(() -> userRepository.save(User.from(dto)));
-        user.setImgUrl(dto.getImgUrl());
         user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setImgUrl(dto.getImgUrl());
         return UserDto.from(user);
     }
 

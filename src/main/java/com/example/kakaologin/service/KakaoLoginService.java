@@ -97,12 +97,17 @@ public class KakaoLoginService {
         System.out.println("id : " + id);
         String nickname = jsonNode.get("properties").get("nickname").asText();
         System.out.println("nickname : " + nickname);
+
+        System.out.println("email : " + jsonNode);
+        String email = jsonNode.get("kakao_account").get("email").asText();
+
         String imgUrl = jsonNode.get("properties").get("profile_image").asText();
         System.out.println("imgUrl : " + imgUrl);
 
         return UserDto.builder()
                 .kakaoId(id)
                 .name(nickname)
+                .email(email)
                 .imgUrl(imgUrl)
                 .build();
     }

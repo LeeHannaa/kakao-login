@@ -31,6 +31,7 @@ public class User {
         return User.builder()
                 .kakaoId(dto.getKakaoId())
                 .name(dto.getName())
+                .email(dto.getEmail())
                 .imgUrl(dto.getImgUrl())
                 .build();
     }

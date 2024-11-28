@@ -10,6 +10,7 @@ public class UserDto {
     private Long id;
     private Long kakaoId;
     private String name;
+    private String email;
     private String imgUrl;
 
     public static UserDto from(User user){
@@ -17,6 +18,7 @@ public class UserDto {
                 .id(user.getId())
                 .kakaoId(user.getKakaoId())
                 .name(user.getName())
+                .email(user.getEmail())
                 .imgUrl(user.getImgUrl())
                 .build();
     }
