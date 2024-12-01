@@ -8,7 +8,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -71,11 +73,10 @@ public class JwtUtil {
                 .orElseThrow(() -> new WrongTokenException("유효하지 않은 리프레시 토큰입니다."));
 
         // 유효하다면 리프레쉬 토큰 삭제 후 액세스 토큰 발급
-        refreshTokenRepository.deleteById(refreshToken);
+        refreshTokenRepository.delete(storedRefreshToken);
         Long userId = storedRefreshToken.getUserId();
         System.out.println("새로운 accessToken, refreshToken 발급 시작!!!");
 
         return this.createToken(userId, secretKey, EXPIRE_TIME_MS, EXPIRE_REFRESH_TIME_MS);
-
     }
 }
