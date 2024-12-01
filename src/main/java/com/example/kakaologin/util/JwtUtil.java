@@ -8,6 +8,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -18,6 +19,10 @@ import java.util.List;
 @Component // Bean Configuration 파일에 Bean을 따로 등록하지 않아도 사용
 public class JwtUtil {
     private final RefreshTokenRepository refreshTokenRepository;
+    @Value("${custom.jwt.expire-time-ms}")
+    private long EXPIRE_TIME_MS;
+    @Value("${custom.jwt.refresh-expire-time-ms}")
+    private long EXPIRE_REFRESH_TIME_MS;
 
 
     // JWT Token 발급
@@ -57,5 +62,20 @@ public class JwtUtil {
         } catch (ExpiredJwtException e) {
             throw new WrongTokenException("만료된 토큰입니다.");
         }
+    }
+
+    // 리프레시 토큰 검증 후, 리프레시 + 액세스 토큰 발급
+    public List<String> validateRefreshToken(String refreshToken, String secretKey) {
+        // 리프레시 토큰 조회 유효하지 않다면 exception 반환 WrongToken
+        RefreshToken storedRefreshToken = refreshTokenRepository.findById(refreshToken)
+                .orElseThrow(() -> new WrongTokenException("유효하지 않은 리프레시 토큰입니다."));
+
+        // 유효하다면 리프레쉬 토큰 삭제 후 액세스 토큰 발급
+        refreshTokenRepository.deleteById(refreshToken);
+        Long userId = storedRefreshToken.getUserId();
+        System.out.println("새로운 accessToken, refreshToken 발급 시작!!!");
+
+        return this.createToken(userId, secretKey, EXPIRE_TIME_MS, EXPIRE_REFRESH_TIME_MS);
+
     }
 }

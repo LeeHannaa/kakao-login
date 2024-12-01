@@ -39,7 +39,6 @@ public class AuthController {
                 authService.kakaoLogin(
                         kakaoLoginService.kakaoLogin(code,request.getHeader("Origin")+"/login/oauth/kakao"));
         List<String> jwtToken = jwtUtil.createToken(userDto.getId(), SECRET_KEY, EXPIRE_TIME_MS, EXPIRE_REFRESH_TIME_MS);
-        System.out.println("userDto.getEmail() : " + userDto.getEmail());
 
         // 헤더 설정
         HttpHeaders headers = new HttpHeaders();

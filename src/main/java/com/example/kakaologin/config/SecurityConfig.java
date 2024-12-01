@@ -2,6 +2,7 @@ package com.example.kakaologin.config;
 
 import com.example.kakaologin.filter.JwtTokenFilter;
 import com.example.kakaologin.service.AuthService;
+import com.example.kakaologin.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtUtil jwtUtil;
     private final AuthService authService;
     @Value("${custom.host.client}")
     private List <String> client;
@@ -38,7 +40,7 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .csrf(AbstractHttpConfigurer::disable) //CSRF 보호 기능이 비활성화되어, CSRF 토큰을 체크하지 않음
                 .addFilterBefore(
-                        new JwtTokenFilter(authService, SECRET_KEY), UsernamePasswordAuthenticationFilter.class)
+                        new JwtTokenFilter(authService, jwtUtil, SECRET_KEY), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // jwt 사용
                 .authorizeHttpRequests(request -> request
@@ -55,7 +57,7 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(client);
         config.setAllowedMethods(Arrays.asList("POST", "GET", "PATCH", "DELETE", "PUT"));
-        config.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
+        config.setAllowedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE, "X-Refresh-Token"));
         config.setAllowCredentials(true); // 내 서버가 응답할 때 json을 JS에서 처리할 수 있게 설정
         // ExpoesdHeader에 클라이언트가 응답에 접근할 수 있는 header들을 추가
         config.addExposedHeader("Authorization");
